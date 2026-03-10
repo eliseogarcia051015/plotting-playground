@@ -8,14 +8,13 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 from matplotlib.widgets import TextBox
 from matplotlib.ticker import MaxNLocator
+import numpy as np
 
-def window():
+def window(lower_bound, upper_bound):
     fig, ax = plt.subplots(figsize=(7,4.5))
     plt.subplots_adjust(bottom=0.2)
     ax.axhline(0, color="black", linestyle="--", linewidth=1)
     ax.axvline(0, color="black", linestyle="--", linewidth=1)
-    lower_bound = -10
-    upper_bound = 10
     ax.set_ylim(lower_bound, upper_bound)
     ax.set_xlim(lower_bound, upper_bound)
     plt.grid(True)
@@ -48,7 +47,15 @@ def window():
 
 def linear(fig,ax):
     #implement me
-    ax.set_title("Y = Ax + B", y=1.05)
+    ax.set_title("Linear equation = Ax + B", y=1.05)
+    xmin, xmax = ax.get_xlim()
+    x = np.linspace(xmin, xmax, 300)
+    
+    A = 1
+    B = 0
+
+    y = (A*x) + B
+    ax.plot(x,y)
     print("Test1")
 
 def quadratic(fig, ax):
@@ -64,7 +71,7 @@ def cosine(fig, ax):
     print("Test4")
 
 def main():
-    window()
+    window(-10, 10)
     print("Nothing so far")
 
 
