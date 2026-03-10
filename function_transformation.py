@@ -10,51 +10,56 @@ from matplotlib.widgets import TextBox
 from matplotlib.ticker import MaxNLocator
 
 def window():
-    fig = plt.figure(figsize=(7,4.5))
-    ax = fig.add_subplot()
-    lower_bound = 0
+    fig, ax = plt.subplots(figsize=(7,4.5))
+    plt.subplots_adjust(bottom=0.2)
+    ax.axhline(0, color="black", linestyle="--", linewidth=1)
+    ax.axvline(0, color="black", linestyle="--", linewidth=1)
+    lower_bound = -10
     upper_bound = 10
     ax.set_ylim(lower_bound, upper_bound)
+    ax.set_xlim(lower_bound, upper_bound)
+    plt.grid(True)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    axbox1 = plt.axes([0.725, 0.01, 0.175, 0.075])
+    axbox1 = plt.axes([0.725, 0.05, 0.175, 0.075])
     prompt_box = TextBox(axbox1, "Choose a graph: Linear(1), Quadratic(2), Sine(3), Cosine(4): ")
     def choose(text):
         try:
-            n = int(text)
-            if n in [1,2,3,4]:
-                prompt_box.set_active(False)
-                axbox1.set_visible(False)
-                match n:
-                    case 1:
-                        linear()
-                    case 2:
-                        quadratic()
-                    case 3:
-                        sine()
-                    case 4:
-                        cosine()
+                n = int(text)
         except ValueError:
-            print("Not a valid integer.")
+            print("Enter a valid number")
             prompt_box.set_val("")
             return
+        prompt_box.set_active(False)
+        axbox1.set_visible(False)
+        if n == 1:
+            linear(fig, ax)
+        elif n == 2:
+            quadratic(fig, ax)
+        elif n == 3:
+            sine(fig, ax)
+        elif n == 4:
+            cosine(fig, ax)
         fig.canvas.draw_idle()
     prompt_box.on_submit(choose)
     plt.show()
 
 
-def linear():
+
+
+def linear(fig,ax):
     #implement me
+    ax.set_title("Y = Ax + B", y=1.05)
     print("Test1")
 
-def quadratic():
+def quadratic(fig, ax):
     #implement me too
     print("Test2")
 
-def sine():
+def sine(fig, ax):
     #implement me three
     print("Test3")
 
-def cosine():
+def cosine(fig, ax):
     #implement me four
     print("Test4")
 
