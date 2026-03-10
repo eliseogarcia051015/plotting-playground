@@ -98,7 +98,6 @@ def main() -> None:
             text_box.label.set_text(f"Point {next_x+1}: ({next_x}, _): ")
             plt.draw()
 
-
     #submit and display everything
     prompt_box.on_submit(set_x)
     text_box.on_submit(submit_y)
