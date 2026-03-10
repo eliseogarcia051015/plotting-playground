@@ -10,21 +10,53 @@ from matplotlib.widgets import TextBox
 from matplotlib.ticker import MaxNLocator
 
 def window():
-    #implement me
     fig = plt.figure(figsize=(7,4.5))
     ax = fig.add_subplot()
-    upper_bound = 10
     lower_bound = 0
+    upper_bound = 10
     ax.set_ylim(lower_bound, upper_bound)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-    axbox1 = plt.axes([0.5, 0.075, 0.4, 0.075])
-    prompt_box = TextBox(axbox1, "How many points would you like to plot: ")
+    axbox1 = plt.axes([0.725, 0.01, 0.175, 0.075])
+    prompt_box = TextBox(axbox1, "Choose a graph: Linear(1), Quadratic(2), Sine(3), Cosine(4): ")
+    def choose(text):
+        try:
+            n = int(text)
+            if n in [1,2,3,4]:
+                prompt_box.set_active(False)
+                axbox1.set_visible(False)
+                match n:
+                    case 1:
+                        linear()
+                    case 2:
+                        quadratic()
+                    case 3:
+                        sine()
+                    case 4:
+                        cosine()
+        except ValueError:
+            print("Not a valid integer.")
+            prompt_box.set_val("")
+            return
+        fig.canvas.draw_idle()
+    prompt_box.on_submit(choose)
     plt.show()
 
 
 def linear():
     #implement me
-    print()
+    print("Test1")
+
+def quadratic():
+    #implement me too
+    print("Test2")
+
+def sine():
+    #implement me three
+    print("Test3")
+
+def cosine():
+    #implement me four
+    print("Test4")
 
 def main():
     window()
