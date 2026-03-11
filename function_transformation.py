@@ -23,7 +23,9 @@ def window(lower_bound, upper_bound):
     prompt_box = TextBox(axbox1, "Choose a graph: Linear(1), Quadratic(2), Sine(3), Cosine(4): ")
     def choose(text):
         try:
-                n = int(text)
+            n = int(text)
+            if n<0:
+                raise ValueError("Please enter a valid int")
         except ValueError:
             print("Enter a valid number")
             prompt_box.set_val("")
@@ -41,22 +43,31 @@ def window(lower_bound, upper_bound):
         fig.canvas.draw_idle()
     prompt_box.on_submit(choose)
     plt.show()
-
-
-
-
 def linear(fig,ax):
-    #implement me
     ax.set_title("Linear equation = Ax + B", y=1.05)
     xmin, xmax = ax.get_xlim()
     x = np.linspace(xmin, xmax, 300)
-    
     A = 1
     B = 0
-
     y = (A*x) + B
-    ax.plot(x,y)
-    print("Test1")
+    line, = ax.plot(x,y)
+
+    ax_slider = plt.axes([0.2, 0.1, 0.65, 0.03], facecolor='yellow')
+    fig.sliderA = Slider(ax_slider, "A", -3, 3   , valinit=A)
+
+    ax_slider2 = plt.axes([0.2, 0.05, 0.65, 0.03], facecolor='red')
+    fig.sliderB = Slider(ax_slider2, "B", -5, 5, valinit=B)
+
+    def update(val):
+        A_val = fig.sliderA.val
+        B_val = fig.sliderB.val
+
+        y = (A_val * x) + B_val
+        line.set_ydata(y)
+        fig.canvas.draw_idle()
+
+    fig.sliderA.on_changed(update)
+    fig.sliderB.on_changed(update)
 
 def quadratic(fig, ax):
     #implement me too
@@ -72,7 +83,7 @@ def cosine(fig, ax):
 
 def main():
     window(-10, 10)
-    print("Nothing so far")
+    print("Program done")
 
 
 if __name__ == "__main__":
