@@ -101,7 +101,7 @@ def linear(fig,ax):
     line, = ax.plot(x,y)
 
     ax_slider = plt.axes([0.2, 0.1, 0.65, 0.03], facecolor='yellow')
-    fig.sliderA = Slider(ax_slider, "A", -3, 3   , valinit=A)
+    fig.sliderA = Slider(ax_slider, "A", -5, 5   , valinit=A)
 
     ax_slider2 = plt.axes([0.2, 0.05, 0.65, 0.03], facecolor='red')
     fig.sliderB = Slider(ax_slider2, "B", -5, 5, valinit=B)
@@ -121,11 +121,48 @@ def linear(fig,ax):
     fig.sliderB.on_changed(update)
 
 
-#called function if prompt equals this, slider transforms function
-#Quadratic: y = Ax^2 + B
 def quadratic(fig, ax):
-    #implement me too
-    print("Test2")
+    """
+    Plots a quadratic function and provides sliders to interactively
+    modify its parameters.
+
+    Linear equation:
+        y = Ax^2 + B
+
+    Sliders
+    -------
+    A : controls the slope of the line
+    B : controls the vertical shift
+    """
+    ax.set_title("Linear equation = Ax + B", y=1.05)
+    xmin, xmax = ax.get_xlim()
+    x = np.linspace(xmin, xmax, 300)
+    A = 1
+    B = 0
+    y = A*(x*x) + B
+    line, = ax.plot(x,y)
+
+    ax_slider = plt.axes([0.2, 0.1, 0.65, 0.03], facecolor='yellow')
+    fig.sliderA = Slider(ax_slider, "A", -5, 5   , valinit=A)
+
+    ax_slider2 = plt.axes([0.2, 0.05, 0.65, 0.03], facecolor='red')
+    fig.sliderB = Slider(ax_slider2, "B", -5, 5, valinit=B)
+
+    def update(val):
+        """
+        Updates the graph whenever a slider value changes.
+        """
+        A_val = fig.sliderA.val
+        B_val = fig.sliderB.val
+
+        y = (A_val * x*x) + B_val
+        line.set_ydata(y)
+        fig.canvas.draw_idle()
+
+    fig.sliderA.on_changed(update)
+    fig.sliderB.on_changed(update)
+
+
 
 
 #called function if prompt equals this, slider transforms function
@@ -145,9 +182,12 @@ def cosine(fig, ax):
 #main function
 def main():
     window(-10, 10)
-    print("Program done")
+    print("Program terminated")
 
 
 if __name__ == "__main__":
     main()
 
+#todo later:
+#somewhere on the right have a plus and minus bottom that strech or decrease the the range of the graph
+#or you could probably have a textbox where you input the bounds X:[[_],[_]]    Y:[[_],[_]]
