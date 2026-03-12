@@ -51,6 +51,7 @@ def window(lower_bound, upper_bound):
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     axbox1 = plt.axes([0.725, 0.05, 0.175, 0.075])
     prompt_box = TextBox(axbox1, "Choose a graph: Linear(1), Quadratic(2), Sine(3), Cosine(4): ")
+    options = [1,2,3,4]
     def choose(text):
         """
         Handles user input from the TextBox and calls the appropriate
@@ -58,7 +59,7 @@ def window(lower_bound, upper_bound):
         """
         try:
             n = int(text)
-            if n<0:
+            if n not in options:
                 raise ValueError("Please enter a valid int")
         except ValueError:
             print("Enter a valid number")
@@ -126,15 +127,15 @@ def quadratic(fig, ax):
     Plots a quadratic function and provides sliders to interactively
     modify its parameters.
 
-    Linear equation:
+    Quadratic equation:
         y = Ax^2 + B
 
     Sliders
     -------
-    A : controls the slope of the line
+    A : controls the slope of the function
     B : controls the vertical shift
     """
-    ax.set_title("Linear equation = Ax + B", y=1.05)
+    ax.set_title("Quadratic equation = Ax^2 + B", y=1.05)
     xmin, xmax = ax.get_xlim()
     x = np.linspace(xmin, xmax, 300)
     A = 1
@@ -168,8 +169,54 @@ def quadratic(fig, ax):
 #called function if prompt equals this, slider transforms function
 #Sine: y = Asin(Bx)+C
 def sine(fig, ax):
-    #implement me three
-    print("Test3")
+    """
+    Plots a quadratic function and provides sliders to interactively
+    modify its parameters.
+
+    Sinusoidal equation:
+        y = Asin(Bx) + C
+
+    Sliders
+    -------
+    A : controls the slope of the function
+    B : controls the frequency of the sine graph
+    C : controls the vertical shift
+    """
+    ax.set_title("Sine equation = Asin(Bx) + C", y=1.05)
+    xmin, xmax = ax.get_xlim()
+    x = np.linspace(xmin, xmax, 300)
+    A = 1
+    B = 1
+    C = 0
+    y = A*np.sin(B * x) + C
+    line, = ax.plot(x,y)
+
+    ax_slider = plt.axes([0.2, 0.12, 0.65, 0.025], facecolor='yellow')
+    fig.sliderA = Slider(ax_slider, "A", -5, 5   , valinit=A)
+
+    ax_slider2 = plt.axes([0.2, 0.07, 0.65, 0.025], facecolor='red')
+    fig.sliderB = Slider(ax_slider2, "B", -5, 5, valinit=B)
+
+    ax_slider3 = plt.axes([0.2, 0.02, 0.65, 0.025], facecolor='green')
+    fig.sliderC = Slider(ax_slider3, "C", -5, 5, valinit=C)
+
+    def update(val):
+        """
+        Updates the graph whenever a slider value changes.
+        """
+        A_val = fig.sliderA.val
+        B_val = fig.sliderB.val
+        C_val = fig.sliderC.val
+
+        y = A_val*np.sin(B_val * x) + C_val
+        line.set_ydata(y)
+        fig.canvas.draw_idle()
+
+    fig.sliderA.on_changed(update)
+    fig.sliderB.on_changed(update)
+    fig.sliderC.on_changed(update)
+
+    
 
 
 #called function if prompt equals this, slider transforms function
