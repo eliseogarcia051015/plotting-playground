@@ -170,7 +170,7 @@ def quadratic(fig, ax):
 #Sine: y = Asin(Bx)+C
 def sine(fig, ax):
     """
-    Plots a quadratic function and provides sliders to interactively
+    Plots a sine function and provides sliders to interactively
     modify its parameters.
 
     Sinusoidal equation:
@@ -222,8 +222,52 @@ def sine(fig, ax):
 #called function if prompt equals this, slider transforms function
 #Cosine: y= Acos(Bx)+C
 def cosine(fig, ax):
-    #implement me four
-    print("Test4")
+    """
+    Plots a cosine function and provides sliders to interactively
+    modify its parameters.
+
+    Sinusoidal equation:
+        y = Acos(Bx) + C
+
+    Sliders
+    -------
+    A : controls the slope of the function
+    B : controls the frequency of the sine graph
+    C : controls the vertical shift
+    """
+    ax.set_title("Cosine equation = Acos(Bx) + C", y=1.05)
+    xmin, xmax = ax.get_xlim()
+    x = np.linspace(xmin, xmax, 300)
+    A = 1
+    B = 1
+    C = 0
+    y = A*np.cos(B * x) + C
+    line, = ax.plot(x,y)
+
+    ax_slider = plt.axes([0.2, 0.12, 0.65, 0.025], facecolor='yellow')
+    fig.sliderA = Slider(ax_slider, "A", -5, 5   , valinit=A)
+
+    ax_slider2 = plt.axes([0.2, 0.07, 0.65, 0.025], facecolor='red')
+    fig.sliderB = Slider(ax_slider2, "B", -5, 5, valinit=B)
+
+    ax_slider3 = plt.axes([0.2, 0.02, 0.65, 0.025], facecolor='green')
+    fig.sliderC = Slider(ax_slider3, "C", -5, 5, valinit=C)
+
+    def update(val):
+        """
+        Updates the graph whenever a slider value changes.
+        """
+        A_val = fig.sliderA.val
+        B_val = fig.sliderB.val
+        C_val = fig.sliderC.val
+
+        y = A_val*np.cos(B_val * x) + C_val
+        line.set_ydata(y)
+        fig.canvas.draw_idle()
+
+    fig.sliderA.on_changed(update)
+    fig.sliderB.on_changed(update)
+    fig.sliderC.on_changed(update)
 
 
 #main function
