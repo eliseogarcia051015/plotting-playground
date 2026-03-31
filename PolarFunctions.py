@@ -19,8 +19,8 @@ from matplotlib.widgets import Slider
 import numpy as np
 
 def window():
-    lower_bound,upper_bound =-10,10
-    fig, ax = plt.subplots(figsize=(7,6))
+    lower_bound,upper_bound =-np.pi,np.pi
+    fig, ax = plt.subplots(figsize=(7,7))
     plt.subplots_adjust(bottom=0.2)
     ax.axhline(0, color="black", linestyle="--", linewidth=1)
     ax.axvline(0, color="black", linestyle="--", linewidth=1)
@@ -56,35 +56,52 @@ def window():
     prompt_box.on_submit(choose)
     plt.show()
 
+
+def PolaRToRect(r, theta):# x = rcos(theta)
+    x = r*np.cos(theta)
+    y = r*np.sin(theta)
+    return x,y
+
 #1
 def rose(fig,ax):
-    ax.set_title("Rose Curve: r = A sin(Bθ)", pad=20)
+    ax.set_title("Rose Curve: r = A sin(Bθ) + C", pad=20)
 
     theta = np.linspace(0, 2*np.pi, 500)
 
     A = 1
     B = 1
+    C = 0
 
-    r = A * np.sin(B * theta)
-    line, = ax.plot(theta, r)
+    r = A * np.sin(B * theta) + C
+    x, y = PolaRToRect(r, theta)
+
+    line, = ax.plot(x, y)
 
     # Sliders
-    ax_sliderA = plt.axes([0.2, 0.15, 0.6, 0.03])
-    sliderA = Slider(ax_sliderA, "A", 0, 5, valinit=A)
+    ax_sliderA = plt.axes([0.2, 0.1, 0.6, 0.03])#magnitude
+    fig.sliderA = Slider(ax_sliderA, "A", 0.01, 5, valinit=A)
 
-    ax_sliderB = plt.axes([0.2, 0.1, 0.6, 0.03])
-    sliderB = Slider(ax_sliderB, "B", 0, 10, valinit=B)
+    ax_sliderB = plt.axes([0.2, 0.05, 0.6, 0.03])#rose pdeals
+    fig.sliderB = Slider(ax_sliderB, "B", 0, 10, valinit=B, valstep=1)
+
+    ax_sliderC = plt.axes([0.2, 0.0075, 0.6, 0.03])#vertical shift
+    fig.sliderC = Slider(ax_sliderC, "C", -4, 4, valinit=C)
 
     def update(val):
-        A_val = sliderA.val
-        B_val = sliderB.val
+        A_val = fig.sliderA.val
+        B_val = fig.sliderB.val
+        C_val = fig.sliderC.val
 
-        r = A_val * np.sin(B_val * theta)
-        line.set_ydata(r)
+        r = A_val * np.sin(B_val * theta) + C_val
+        x, y = PolaRToRect(r, theta)
+
+        line.set_xdata(x)
+        line.set_ydata(y)
         fig.canvas.draw_idle()
 
-    sliderA.on_changed(update)
-    sliderB.on_changed(update)
+    fig.sliderA.on_changed(update)
+    fig.sliderB.on_changed(update)
+    fig.sliderC.on_changed(update)
 
 #2
 def spiral(fig,ax):
