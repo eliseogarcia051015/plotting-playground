@@ -15,10 +15,12 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.widgets import TextBox
 import math
+from matplotlib.widgets import Slider
+import numpy as np
 
 def window():
     lower_bound,upper_bound =-10,10
-    fig, ax = plt.subplots(figsize=(7,4.5))
+    fig, ax = plt.subplots(figsize=(7,6))
     plt.subplots_adjust(bottom=0.2)
     ax.axhline(0, color="black", linestyle="--", linewidth=1)
     ax.axvline(0, color="black", linestyle="--", linewidth=1)
@@ -56,7 +58,33 @@ def window():
 
 #1
 def rose(fig,ax):
-    print("Nothing so far (1)")
+    ax.set_title("Rose Curve: r = A sin(Bθ)", pad=20)
+
+    theta = np.linspace(0, 2*np.pi, 500)
+
+    A = 1
+    B = 1
+
+    r = A * np.sin(B * theta)
+    line, = ax.plot(theta, r)
+
+    # Sliders
+    ax_sliderA = plt.axes([0.2, 0.15, 0.6, 0.03])
+    sliderA = Slider(ax_sliderA, "A", 0, 5, valinit=A)
+
+    ax_sliderB = plt.axes([0.2, 0.1, 0.6, 0.03])
+    sliderB = Slider(ax_sliderB, "B", 0, 10, valinit=B)
+
+    def update(val):
+        A_val = sliderA.val
+        B_val = sliderB.val
+
+        r = A_val * np.sin(B_val * theta)
+        line.set_ydata(r)
+        fig.canvas.draw_idle()
+
+    sliderA.on_changed(update)
+    sliderB.on_changed(update)
 
 #2
 def spiral(fig,ax):
