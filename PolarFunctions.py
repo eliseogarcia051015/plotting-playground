@@ -19,7 +19,7 @@ from matplotlib.widgets import Slider
 import numpy as np
 
 def window():
-    lower_bound,upper_bound =-np.pi,np.pi
+    lower_bound,upper_bound =2*-np.pi,2*np.pi
     fig, ax = plt.subplots(figsize=(7,7))
     plt.subplots_adjust(bottom=0.2)
     ax.axhline(0, color="black", linestyle="--", linewidth=1)
@@ -29,7 +29,7 @@ def window():
     plt.grid(True)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     axbox = plt.axes([0.725, 0.05, 0.175, 0.075])
-    prompt_box = TextBox(axbox, "Choose a graph: Rose Curve(1), Spiral(2), Cardioid(3), Cosine Rose(4): ")
+    prompt_box = TextBox(axbox, "Choose a graph: Spiral(1), Rose Curve(2), Cardioid(3), Cosine Rose(4): ")
     options = [1, 2, 3, 4]
     def choose(text):
         try:
@@ -44,9 +44,9 @@ def window():
         axbox.set_visible(False)
 
         if n == 1:
-            rose(fig, ax)
-        elif n == 2:
             spiral(fig, ax)
+        elif n == 2:
+            rose(fig, ax)
         elif n == 3:
             cardioid(fig, ax)
         elif n == 4:
@@ -63,6 +63,35 @@ def PolaRToRect(r, theta):# x = rcos(theta)
     return x,y
 
 #1
+def spiral(fig,ax):
+    ax.set_title("Spiral: r = a + bθ", pad=20)
+    A = 0
+    B = 1
+
+    theta = np.linspace(0, 2*np.pi, 500)
+    r = A + (B*theta)
+    x,y = PolaRToRect(r, theta)
+    line, = ax.plot(x,y)
+
+    ax_sliderA = plt.axes([0.2, 0.15, 0.6, 0.03])
+    fig.sliderA = Slider(ax_sliderA, "A", -3, 3, valinit=A, valstep=0.05)
+
+    ax_sliderB = plt.axes([0.2, 0.1, 0.6, 0.03])
+    fig.sliderB = Slider(ax_sliderB, "B", 0, 5, valinit=B)
+    
+    def update(val):
+        A_val = fig.sliderA.val
+        B_val = fig.sliderB.val
+
+        r = A_val + (B_val * theta)
+        x,y = PolaRToRect(r, theta)
+
+        line.set_xdata(x)
+        line.set_ydata(y)
+    fig.sliderA.on_changed(update)
+    fig.sliderB.on_changed(update)
+
+#2
 def rose(fig,ax):
     ax.set_title("Rose Curve: r = A sin(Bθ) + C", pad=20)
 
@@ -79,13 +108,13 @@ def rose(fig,ax):
 
     # Sliders
     ax_sliderA = plt.axes([0.2, 0.1, 0.6, 0.03])#magnitude
-    fig.sliderA = Slider(ax_sliderA, "A", 0.01, 5, valinit=A)
+    fig.sliderA = Slider(ax_sliderA, "A", 0.00, 5, valinit=A, valstep=0.05)
 
     ax_sliderB = plt.axes([0.2, 0.05, 0.6, 0.03])#rose pdeals
     fig.sliderB = Slider(ax_sliderB, "B", 0, 10, valinit=B, valstep=1)
 
     ax_sliderC = plt.axes([0.2, 0.0075, 0.6, 0.03])#vertical shift
-    fig.sliderC = Slider(ax_sliderC, "C", -4, 4, valinit=C)
+    fig.sliderC = Slider(ax_sliderC, "C", -4, 4, valinit=C, valstep=0.05)
 
     def update(val):
         A_val = fig.sliderA.val
@@ -102,10 +131,6 @@ def rose(fig,ax):
     fig.sliderA.on_changed(update)
     fig.sliderB.on_changed(update)
     fig.sliderC.on_changed(update)
-
-#2
-def spiral(fig,ax):
-    print("Nothing so far (2)")
 
 #3
 def cardioid(fig,ax):
