@@ -37,12 +37,11 @@ def window():
 
     zoom_in_ax = plt.axes([0.05, 0.92, 0.1, 0.05]) 
     zoom_in_button = Button(zoom_in_ax, "+") 
-    #implement method
-    #lower_bounds = method(#) 
+    zoom_in_button.on_clicked(lambda event: zoom(event, ax, fig, factor=0.75))
 
     zoom_out_ax = plt.axes([0.15, 0.92, 0.1, 0.05]) 
     zoom_out_button = Button(zoom_out_ax, "-") 
-    #implement method
+    zoom_out_button.on_clicked(lambda event: zoom(event, ax, fig, factor=1.33))
 
     reset_ax = plt.axes([0.85, 0.92, 0.1, 0.05]) 
     reset_button = Button(reset_ax, "Reset") 
@@ -82,6 +81,19 @@ def choose(fig, ax):
         fig.canvas.draw_idle()
     prompt_box.on_submit(cont)
 
+
+def zoom(event, ax, fig, factor):
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+    x_mid = (xlim[0] + xlim[1]) / 2
+    y_mid = (ylim[0] + ylim[1]) / 2
+    x_range = (xlim[1] - xlim[0]) * factor / 2
+    y_range = (ylim[1] - ylim[0]) * factor / 2
+    ax.set_xlim(x_mid - x_range, x_mid + x_range)
+    ax.set_ylim(y_mid - y_range, y_mid + y_range)
+    fig.canvas.draw_idle()
+
+
 def reset(event, fig, ax):
     for sax in getattr(fig, 'slider_axes', []): #clearing sliders
         sax.remove()
@@ -104,7 +116,7 @@ def PolaRToRect(r, theta):# x = rcos(theta)
     y = r*np.sin(theta)
     return x,y
 
-#auto-scale 
+#scaling 
 
 #1
 '''
