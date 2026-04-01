@@ -5,19 +5,17 @@ I want to keep the idea of sliders, but look into how that implementation will l
 like given things like petals
 
 Functions:
-    1. Rose Curve       r = A sin(Bθ)
-    2. Spiral           r = Aθ
+    1. Spiral           r = A + Bθ
+    2. Rose Curve       r = A sin(Bθ) + C
     3. Cardioid         r = A(1 + cos(θ))
     4. Cosine Rose      r = A[cos(Bθ)]
 """
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
-from matplotlib.widgets import TextBox
-import math
-from matplotlib.widgets import Slider
-from matplotlib.widgets import Button
+from matplotlib.widgets import TextBox, Slider, Button
 import numpy as np
+
 
 def window():
     lower_bound,upper_bound =2*-np.pi,2*np.pi
@@ -25,12 +23,14 @@ def window():
     fig, ax = plt.subplots(figsize=(7,7))
     fig.canvas.manager.set_window_title("Polar Function Visualizer")
     plt.subplots_adjust(bottom=0.2)
+    fig.slider_axes = [] 
+    fig.choose_ax = None
 
     ax.axhline(0, color="black", linestyle="--", linewidth=1)
     ax.axvline(0, color="black", linestyle="--", linewidth=1)
     ax.set_ylim(lower_bound, upper_bound)
     ax.set_xlim(lower_bound, upper_bound)
-    plt.grid(True)
+    ax.grid(True)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
     choose(fig, ax)
@@ -38,6 +38,7 @@ def window():
     zoom_in_ax = plt.axes([0.05, 0.92, 0.1, 0.05]) 
     zoom_in_button = Button(zoom_in_ax, "+") 
     #implement method
+    #lower_bounds = method(#) 
 
     zoom_out_ax = plt.axes([0.15, 0.92, 0.1, 0.05]) 
     zoom_out_button = Button(zoom_out_ax, "-") 
@@ -46,11 +47,12 @@ def window():
     reset_ax = plt.axes([0.85, 0.92, 0.1, 0.05]) 
     reset_button = Button(reset_ax, "Reset") 
     reset_button.on_clicked(lambda event: reset(event, fig, ax))
-
     plt.show()
+
 
 def choose(fig, ax):
     axbox = plt.axes([0.725, 0.05, 0.175, 0.075])
+    fig.choose_ax = axbox
     prompt_box = TextBox(axbox, "Choose a graph: Spiral(1), Rose Curve(2), Cardioid(3), Cosine Rose(4): ")
     options = [1, 2, 3, 4]
     def cont(text):
@@ -62,8 +64,11 @@ def choose(fig, ax):
             print("Enter a valid number (1-4)")
             prompt_box.set_val("")
             return
-        prompt_box.set_active(False)
-        axbox.set_visible(False)
+        
+        if getattr(fig, 'choose_ax', None) is not None:
+            fig.choose_ax.remove()
+            fig.choose_ax = None
+        fig.canvas.draw_idle()
 
         if n == 1:
             spiral(fig, ax)
@@ -78,16 +83,28 @@ def choose(fig, ax):
     prompt_box.on_submit(cont)
 
 def reset(event, fig, ax):
+    for sax in getattr(fig, 'slider_axes', []): #clearing sliders
+        sax.remove()
+    fig.slider_axes = []
     ax.clear()
-    for extra_ax in fig.axes[1:]:
-        extra_ax.remove()
+    lower_bound, upper_bound = -2 * np.pi, 2 * np.pi
+    ax.axhline(0, color="black", linestyle="--", linewidth=1)
+    ax.axvline(0, color="black", linestyle="--", linewidth=1)
+    ax.set_xlim(lower_bound, upper_bound)
+    ax.set_ylim(lower_bound, upper_bound)
+    ax.grid(True)
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
     choose(fig, ax)
     fig.canvas.draw_idle()
+
 
 def PolaRToRect(r, theta):# x = rcos(theta)
     x = r*np.cos(theta)
     y = r*np.sin(theta)
     return x,y
+
+#auto-scale 
 
 #1
 '''
@@ -101,14 +118,15 @@ def spiral(fig,ax):
     theta = np.linspace(0, 2*np.pi, 500)
     r = A + (B*theta)
     x,y = PolaRToRect(r, theta)
-    line, = ax.plot(x,y)
+    line, = ax.plot(x,y, color="steelblue")
 
     ax_sliderA = plt.axes([0.2, 0.15, 0.6, 0.03])
     fig.sliderA = Slider(ax_sliderA, "A", -3, 3, valinit=A, valstep=0.05)
 
     ax_sliderB = plt.axes([0.2, 0.1, 0.6, 0.03])
     fig.sliderB = Slider(ax_sliderB, "B", 0, 5, valinit=B)
-    
+
+    fig.slider_axes = [ax_sliderA, ax_sliderB] 
     def update(val):
         A_val = fig.sliderA.val
         B_val = fig.sliderB.val
@@ -120,7 +138,7 @@ def spiral(fig,ax):
         line.set_ydata(y)
     fig.sliderA.on_changed(update)
     fig.sliderB.on_changed(update)
-    
+
 
 #2
 def rose(fig,ax):
@@ -147,6 +165,7 @@ def rose(fig,ax):
     ax_sliderC = plt.axes([0.2, 0.0075, 0.6, 0.03])#vertical shift
     fig.sliderC = Slider(ax_sliderC, "C", -4, 4, valinit=C, valstep=0.05)
 
+    fig.slider_axes = [ax_sliderA, ax_sliderB, ax_sliderC]
     def update(val):
         A_val = fig.sliderA.val
         B_val = fig.sliderB.val
