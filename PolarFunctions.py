@@ -16,22 +16,44 @@ from matplotlib.ticker import MaxNLocator
 from matplotlib.widgets import TextBox
 import math
 from matplotlib.widgets import Slider
+from matplotlib.widgets import Button
 import numpy as np
 
 def window():
     lower_bound,upper_bound =2*-np.pi,2*np.pi
+
     fig, ax = plt.subplots(figsize=(7,7))
+    fig.canvas.manager.set_window_title("Polar Function Visualizer")
     plt.subplots_adjust(bottom=0.2)
+
     ax.axhline(0, color="black", linestyle="--", linewidth=1)
     ax.axvline(0, color="black", linestyle="--", linewidth=1)
     ax.set_ylim(lower_bound, upper_bound)
     ax.set_xlim(lower_bound, upper_bound)
     plt.grid(True)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    choose(fig, ax)
+
+    zoom_in_ax = plt.axes([0.05, 0.92, 0.1, 0.05]) 
+    zoom_in_button = Button(zoom_in_ax, "+") 
+    #implement method
+
+    zoom_out_ax = plt.axes([0.15, 0.92, 0.1, 0.05]) 
+    zoom_out_button = Button(zoom_out_ax, "-") 
+    #implement method
+
+    reset_ax = plt.axes([0.85, 0.92, 0.1, 0.05]) 
+    reset_button = Button(reset_ax, "Reset") 
+    reset_button.on_clicked(lambda event: reset(event, fig, ax))
+
+    plt.show()
+
+def choose(fig, ax):
     axbox = plt.axes([0.725, 0.05, 0.175, 0.075])
     prompt_box = TextBox(axbox, "Choose a graph: Spiral(1), Rose Curve(2), Cardioid(3), Cosine Rose(4): ")
     options = [1, 2, 3, 4]
-    def choose(text):
+    def cont(text):
         try:
             n = int(text)
             if n not in options:
@@ -53,9 +75,14 @@ def window():
             cosine_rose(fig, ax)
 
         fig.canvas.draw_idle()
-    prompt_box.on_submit(choose)
-    plt.show()
+    prompt_box.on_submit(cont)
 
+def reset(event, fig, ax):
+    ax.clear()
+    for extra_ax in fig.axes[1:]:
+        extra_ax.remove()
+    choose(fig, ax)
+    fig.canvas.draw_idle()
 
 def PolaRToRect(r, theta):# x = rcos(theta)
     x = r*np.cos(theta)
@@ -63,6 +90,9 @@ def PolaRToRect(r, theta):# x = rcos(theta)
     return x,y
 
 #1
+'''
+GOTTA FIX BOUNDS. RIGHT NOW SPIRAL ONLY  GOES UP TO WHAT BOUNDS ARE ALREADY SET IN WINDOW
+'''
 def spiral(fig,ax):
     ax.set_title("Spiral: r = a + bθ", pad=20)
     A = 0
@@ -90,6 +120,7 @@ def spiral(fig,ax):
         line.set_ydata(y)
     fig.sliderA.on_changed(update)
     fig.sliderB.on_changed(update)
+    
 
 #2
 def rose(fig,ax):
