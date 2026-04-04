@@ -25,6 +25,7 @@ def window():
     plt.subplots_adjust(bottom=0.2)
     fig.slider_axes = [] 
     fig.choose_ax = None
+    fig.prompt_box = None
 
     ax.axhline(0, color="black", linestyle="--", linewidth=1)
     ax.axvline(0, color="black", linestyle="--", linewidth=1)
@@ -165,8 +166,6 @@ def spiral(fig,ax):
 
 #2
 def rose(fig,ax):
-    ax.set_title("Rose Curve: r = A sin(Bθ) + C", pad=20)
-
     theta = np.linspace(0, 2*np.pi, 500)
 
     A = 1
@@ -189,10 +188,14 @@ def rose(fig,ax):
     fig.sliderC = Slider(ax_sliderC, "C", -4, 4, valinit=C, valstep=0.05)
 
     fig.slider_axes = [ax_sliderA, ax_sliderB, ax_sliderC]
+    ax.set_title(f"Rose Curve: r = {A}sin({B}θ) + {C}", pad=20)
     def update(val):
         A_val = fig.sliderA.val
         B_val = fig.sliderB.val
         C_val = fig.sliderC.val
+
+        A, B, C = A_val, B_val, C_val
+        ax.set_title(f"Rose Curve: r = {A:.2f}sin({B}θ) + {C:.2f}", pad=20)
 
         r = A_val * np.sin(B_val * theta) + C_val
         x, y = PolaRToRect(r, theta)
@@ -206,8 +209,9 @@ def rose(fig,ax):
     fig.sliderC.on_changed(update)
 
 #3
-def cardioid(fig,ax):
+def cardioid(fig,ax): # r = a(1 + cos(theta))
     print("Nothing so far (3)")
+    ax.set_title("Cardioid: ")
 
 #4
 def cosine_rose(fig,ax):
