@@ -135,7 +135,6 @@ def PolaRToRect(r, theta):# x = rcos(theta)
 GOTTA FIX BOUNDS. RIGHT NOW SPIRAL ONLY  GOES UP TO WHAT BOUNDS ARE ALREADY SET IN WINDOW
 '''
 def spiral(fig,ax):
-    ax.set_title("Spiral: r = a + bθ", pad=20)
     A = 0
     B = 1
 
@@ -144,13 +143,14 @@ def spiral(fig,ax):
     x,y = PolaRToRect(r, theta)
     line, = ax.plot(x,y, color="steelblue")
 
-    ax_sliderA = plt.axes([0.2, 0.15, 0.6, 0.03])
+    ax_sliderA = plt.axes([0.2, 0.10, 0.6, 0.03])
     fig.sliderA = Slider(ax_sliderA, "A", -3, 3, valinit=A, valstep=0.05)
 
-    ax_sliderB = plt.axes([0.2, 0.1, 0.6, 0.03])
+    ax_sliderB = plt.axes([0.2, 0.05, 0.6, 0.03])
     fig.sliderB = Slider(ax_sliderB, "B", 0, 5, valinit=B)
 
     fig.slider_axes = [ax_sliderA, ax_sliderB] 
+    ax.set_title(f"Spiral: r = {A} + {B}θ", pad=20)
     def update(val):
         A_val = fig.sliderA.val
         B_val = fig.sliderB.val
@@ -160,6 +160,8 @@ def spiral(fig,ax):
 
         line.set_xdata(x)
         line.set_ydata(y)
+
+        ax.set_title(f"Spiral: r = {A_val:.2f} + {B_val:.3f}θ", pad=20)
     fig.sliderA.on_changed(update)
     fig.sliderB.on_changed(update)
 
