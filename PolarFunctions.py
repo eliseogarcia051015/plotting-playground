@@ -53,6 +53,7 @@ def choose(fig, ax):
     axbox = plt.axes([0.725, 0.05, 0.175, 0.075])
     fig.choose_ax = axbox
     prompt_box = TextBox(axbox, "Choose a graph: Spiral(1), Rose Curve(2), Cardioid(3), Cosine Rose(4): ")
+    fig.prompt_box = prompt_box #reference to it needed for better resetting
     options = [1, 2, 3, 4]
     def cont(text):
         try:
@@ -65,6 +66,8 @@ def choose(fig, ax):
             return
         
         if getattr(fig, 'choose_ax', None) is not None:
+            fig.prompt_box.disconnect_events() #kill listeners
+            fig.prompt_box = None
             fig.choose_ax.remove()
             fig.choose_ax = None
         fig.canvas.draw_idle()
@@ -95,9 +98,18 @@ def zoom(event, ax, fig, factor):
 
 
 def reset(event, fig, ax):
-    for sax in getattr(fig, 'slider_axes', []): #clearing sliders
+    if getattr(fig, 'prompt_box', None) is not None:
+        fig.prompt_box.disconnect_events()
+        fig.prompt_box = None
+    if getattr(fig, 'choose_ax', None) is not None:
+        fig.choose_ax.remove()
+        fig.choose_ax = None
+    for sax in getattr(fig, 'slider_axes', []):
         sax.remove()
     fig.slider_axes = []
+    for attr in ('sliderA', 'sliderB', 'sliderC'):
+        if hasattr(fig, attr):
+            delattr(fig, attr)
     ax.clear()
     lower_bound, upper_bound = -2 * np.pi, 2 * np.pi
     ax.axhline(0, color="black", linestyle="--", linewidth=1)
@@ -109,7 +121,6 @@ def reset(event, fig, ax):
 
     choose(fig, ax)
     fig.canvas.draw_idle()
-
 
 def PolaRToRect(r, theta):# x = rcos(theta)
     x = r*np.cos(theta)
