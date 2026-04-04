@@ -124,11 +124,9 @@ def reset(event, fig, ax):
     fig.canvas.draw_idle()
 
 def PolaRToRect(r, theta):# x = rcos(theta)
-    x = r*np.cos(theta)
-    y = r*np.sin(theta)
+    x = r*np.cos(theta)# x = rcos(theta)
+    y = r*np.sin(theta)# y = rsin(theta)
     return x,y
-
-#scaling 
 
 #1
 '''
@@ -168,38 +166,36 @@ def spiral(fig,ax):
 
 #2
 def rose(fig,ax):
-    theta = np.linspace(0, 2*np.pi, 500)
-
-    A = 1
+    A = 0
     B = 1
-    C = 0
-
-    r = A * np.sin(B * theta) + C
+    C = 1
+    theta = np.linspace(0, 2*np.pi, 500)
+    r = A + (B * np.sin(C * theta))
     x, y = PolaRToRect(r, theta)
 
     line, = ax.plot(x, y)
 
     # Sliders
     ax_sliderA = plt.axes([0.2, 0.1, 0.6, 0.03])#magnitude
-    fig.sliderA = Slider(ax_sliderA, "A", 0.00, 5, valinit=A, valstep=0.05)
+    fig.sliderA = Slider(ax_sliderA, "A", -5, 5, valinit=A, valstep=0.05)
 
     ax_sliderB = plt.axes([0.2, 0.05, 0.6, 0.03])#rose pdeals
-    fig.sliderB = Slider(ax_sliderB, "B", 0, 10, valinit=B, valstep=1)
+    fig.sliderB = Slider(ax_sliderB, "B", 0, 10, valinit=B, valstep=0.05)
 
     ax_sliderC = plt.axes([0.2, 0.0075, 0.6, 0.03])#vertical shift
-    fig.sliderC = Slider(ax_sliderC, "C", -4, 4, valinit=C, valstep=0.05)
+    fig.sliderC = Slider(ax_sliderC, "C", -5, 5, valinit=C, valstep=0.05)
 
     fig.slider_axes = [ax_sliderA, ax_sliderB, ax_sliderC]
-    ax.set_title(f"Rose Curve: r = {A}sin({B}θ) + {C}", pad=20)
+    ax.set_title(f"Rose Curve: r = {A} + {B}sin({C}θ)", pad=20)
     def update(val):
         A_val = fig.sliderA.val
         B_val = fig.sliderB.val
         C_val = fig.sliderC.val
 
         A, B, C = A_val, B_val, C_val
-        ax.set_title(f"Rose Curve: r = {A:.2f}sin({B}θ) + {C:.2f}", pad=20)
+        ax.set_title(f"Rose Curve: r = {A:.2f}+ {B:.2f}sin({C:.2f}θ)", pad=20)
 
-        r = A_val * np.sin(B_val * theta) + C_val
+        r = A + (B * np.sin(C * theta)) 
         x, y = PolaRToRect(r, theta)
 
         line.set_xdata(x)
@@ -211,11 +207,48 @@ def rose(fig,ax):
     fig.sliderC.on_changed(update)
 
 #3
-def cardioid(fig,ax): # r = a(1 + cos(theta))
-    print("Nothing so far (3)")
-    ax.set_title("Cardioid: ")
+def cardioid(fig,ax): # r = A + Bcos(Cθ)
+    A = 0
+    B = 1
+    C = 1
+    theta = np.linspace(0, 2*np.pi, 500)
+    r = A + (B * np.cos(C*theta))
+    x, y = PolaRToRect(r, theta)
+    line, = ax.plot(x,y)
 
-#4
+    # Sliders
+    ax_sliderA = plt.axes([0.2, 0.1, 0.6, 0.03])#magnitude
+    fig.sliderA = Slider(ax_sliderA, "A", -5, 5, valinit=A, valstep=0.05)
+
+    ax_sliderB = plt.axes([0.2, 0.05, 0.6, 0.03])
+    fig.sliderB = Slider(ax_sliderB, "B", 0, 10, valinit=B, valstep=0.05)
+
+    ax_sliderC = plt.axes([0.2, 0.0075, 0.6, 0.03])#vertical shift
+    fig.sliderC = Slider(ax_sliderC, "C", -5, 5, valinit=C, valstep=0.05)
+
+    fig.slider_axes = [ax_sliderA, ax_sliderB, ax_sliderC]
+    ax.set_title(f"Cardioid: r = {A} + {B}cos({C}θ)", pad=20)
+    def update(val):
+        A_val = fig.sliderA.val
+        B_val = fig.sliderB.val
+        C_val = fig.sliderC.val
+
+        A, B, C = A_val, B_val, C_val
+        ax.set_title(f"Cardioid: r = {A:.2f}+ {B:.2f}cos({C:.2f}θ)", pad=20)
+
+        r = A + (B * np.cos(C * theta)) 
+        x, y = PolaRToRect(r, theta)
+
+        line.set_xdata(x)
+        line.set_ydata(y)
+        fig.canvas.draw_idle()
+
+    fig.sliderA.on_changed(update)
+    fig.sliderB.on_changed(update)
+    fig.sliderC.on_changed(update)
+
+
+#4 
 def cosine_rose(fig,ax):
     print("Nothing so far (4)")
 
