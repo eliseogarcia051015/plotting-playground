@@ -8,7 +8,7 @@ Functions:
     1. Spiral           r = A + Bθ
     2. Rose Curve       r = A sin(Bθ) + C
     3. Cardioid         r = A(1 + cos(θ))
-    4. Cosine Rose      r = A[cos(Bθ)]
+    4. General Rose      r = 
 """
 
 import matplotlib.pyplot as plt
@@ -23,6 +23,7 @@ def window():
     fig, ax = plt.subplots(figsize=(7,7))
     fig.canvas.manager.set_window_title("Polar Function Visualizer")
     plt.subplots_adjust(bottom=0.2)
+    ax.set_aspect('equal', adjustable='box')
     fig.slider_axes = [] 
     fig.choose_ax = None
     fig.prompt_box = None
@@ -36,6 +37,9 @@ def window():
 
     choose(fig, ax)
 
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    
     zoom_in_ax = plt.axes([0.05, 0.92, 0.1, 0.05]) 
     zoom_in_button = Button(zoom_in_ax, "+") 
     zoom_in_button.on_clicked(lambda event: zoom(event, ax, fig, factor=0.75))
@@ -51,9 +55,18 @@ def window():
 
 
 def choose(fig, ax):
+    ax.clear()
+    lower_bound, upper_bound = -2 * np.pi, 2 * np.pi
+    ax.axhline(0, color="black", linestyle="--", linewidth=1)
+    ax.axvline(0, color="black", linestyle="--", linewidth=1)
+    ax.set_xlim(lower_bound, upper_bound)
+    ax.set_ylim(lower_bound, upper_bound)
+    ax.grid(True)
+    ax.set_aspect('equal', adjustable='box')
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     axbox = plt.axes([0.725, 0.05, 0.175, 0.075])
     fig.choose_ax = axbox
-    prompt_box = TextBox(axbox, "Choose a graph: Spiral(1), Rose Curve(2), Cardioid(3), Cosine Rose(4): ")
+    prompt_box = TextBox(axbox, "Choose a graph: Spiral(1), Rose Curve(2), Cardioid(3), General rose(4): ")
     fig.prompt_box = prompt_box #reference to it needed for better resetting
     options = [1, 2, 3, 4]
     def cont(text):
@@ -80,7 +93,7 @@ def choose(fig, ax):
         elif n == 3:
             cardioid(fig, ax)
         elif n == 4:
-            cosine_rose(fig, ax)
+            general_rose(fig, ax)
 
         fig.canvas.draw_idle()
     prompt_box.on_submit(cont)
@@ -105,8 +118,14 @@ def reset(event, fig, ax):
     if getattr(fig, 'choose_ax', None) is not None:
         fig.choose_ax.remove()
         fig.choose_ax = None
+    for attr in ('sliderA', 'sliderB', 'sliderC', 'sliderD'):
+        if hasattr(fig, attr):
+            getattr(fig, attr).disconnect_events()
+            delattr(fig, attr)
     for sax in getattr(fig, 'slider_axes', []):
         sax.remove()
+
+    fig.slider_axes = []
     fig.slider_axes = []
     for attr in ('sliderA', 'sliderB', 'sliderC'):
         if hasattr(fig, attr):
@@ -118,6 +137,7 @@ def reset(event, fig, ax):
     ax.set_xlim(lower_bound, upper_bound)
     ax.set_ylim(lower_bound, upper_bound)
     ax.grid(True)
+    ax.set_aspect('equal', adjustable='box')
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
     choose(fig, ax)
@@ -129,20 +149,17 @@ def PolaRToRect(r, theta):# x = rcos(theta)
     return x,y
 
 #1
-'''
-GOTTA FIX BOUNDS. RIGHT NOW SPIRAL ONLY  GOES UP TO WHAT BOUNDS ARE ALREADY SET IN WINDOW
-'''
 def spiral(fig,ax):
     A = 0
     B = 1
 
-    theta = np.linspace(0, 2*np.pi, 500)
+    theta = np.linspace(0, 10*np.pi, 1000)
     r = A + (B*theta)
     x,y = PolaRToRect(r, theta)
     line, = ax.plot(x,y, color="steelblue")
 
     ax_sliderA = plt.axes([0.2, 0.10, 0.6, 0.03])
-    fig.sliderA = Slider(ax_sliderA, "A", -3, 3, valinit=A, valstep=0.05)
+    fig.sliderA = Slider(ax_sliderA, "A", -20, 20, valinit=A, valstep=0.05)
 
     ax_sliderB = plt.axes([0.2, 0.05, 0.6, 0.03])
     fig.sliderB = Slider(ax_sliderB, "B", 0, 5, valinit=B)
@@ -160,12 +177,13 @@ def spiral(fig,ax):
         line.set_ydata(y)
 
         ax.set_title(f"Spiral: r = {A_val:.2f} + {B_val:.3f}θ", pad=20)
+        fig.canvas.draw_idle()
     fig.sliderA.on_changed(update)
     fig.sliderB.on_changed(update)
 
 
 #2
-def rose(fig,ax):
+def rose(fig,ax): #sine
     A = 0
     B = 1
     C = 1
@@ -173,13 +191,13 @@ def rose(fig,ax):
     r = A + (B * np.sin(C * theta))
     x, y = PolaRToRect(r, theta)
 
-    line, = ax.plot(x, y)
+    line, = ax.plot(x, y, color="red")
 
     # Sliders
     ax_sliderA = plt.axes([0.2, 0.1, 0.6, 0.03])#magnitude
     fig.sliderA = Slider(ax_sliderA, "A", -5, 5, valinit=A, valstep=0.05)
 
-    ax_sliderB = plt.axes([0.2, 0.05, 0.6, 0.03])#rose pdeals
+    ax_sliderB = plt.axes([0.2, 0.05, 0.6, 0.03])#rose petals
     fig.sliderB = Slider(ax_sliderB, "B", 0, 10, valinit=B, valstep=0.05)
 
     ax_sliderC = plt.axes([0.2, 0.0075, 0.6, 0.03])#vertical shift
@@ -214,7 +232,7 @@ def cardioid(fig,ax): # r = A + Bcos(Cθ)
     theta = np.linspace(0, 2*np.pi, 500)
     r = A + (B * np.cos(C*theta))
     x, y = PolaRToRect(r, theta)
-    line, = ax.plot(x,y)
+    line, = ax.plot(x,y, color="green")
 
     # Sliders
     ax_sliderA = plt.axes([0.2, 0.1, 0.6, 0.03])#magnitude
@@ -249,8 +267,63 @@ def cardioid(fig,ax): # r = A + Bcos(Cθ)
 
 
 #4 
-def cosine_rose(fig,ax):
-    print("Nothing so far (4)")
+def general_rose(fig, ax):
+    A = 0
+    B = 1
+    C = 1
+    D = 0
+
+    theta = np.linspace(0, 2*np.pi, 500)
+    r = A + (B * np.sin(C * theta + D))
+    x, y = PolaRToRect(r, theta)
+
+    line, = ax.plot(x, y, color="purple")
+
+    # Sliders
+    ax_sliderA = plt.axes([0.2, 0.12, 0.6, 0.03])
+    fig.sliderA = Slider(ax_sliderA, "A", -5, 5, valinit=A, valstep=0.05)
+
+    ax_sliderB = plt.axes([0.2, 0.08, 0.6, 0.03])
+    fig.sliderB = Slider(ax_sliderB, "B", 0, 10, valinit=B, valstep=0.05)
+
+    ax_sliderC = plt.axes([0.2, 0.04, 0.6, 0.03])
+    fig.sliderC = Slider(ax_sliderC, "C", 0, 10, valinit=C, valstep=0.05)
+
+    ax_sliderD = plt.axes([0.2, 0.00, 0.6, 0.03])
+    fig.sliderD = Slider(ax_sliderD, "D", 0, 2*np.pi, valinit=D)
+
+    fig.slider_axes = [ax_sliderA, ax_sliderB, ax_sliderC, ax_sliderD]
+
+    ax.set_title(
+        f"General Rose: r = {A} + {B}sin({C}θ + {D:.2f})",
+        pad=20
+    )
+
+    def update(val):
+        A = fig.sliderA.val
+        B = fig.sliderB.val
+        C = fig.sliderC.val
+        D = fig.sliderD.val
+
+        r = A + (B * np.sin(C * theta + D))
+        x, y = PolaRToRect(r, theta)
+
+        line.set_xdata(x)
+        line.set_ydata(y)
+
+        ax.set_title(
+            f"General Rose: r = {A:.2f} + {B:.2f}sin({C:.2f}θ + {D:.2f})",
+            pad=20
+        )
+
+        ax.relim()
+        ax.autoscale_view()
+        fig.canvas.draw_idle()
+
+    fig.sliderA.on_changed(update)
+    fig.sliderB.on_changed(update)
+    fig.sliderC.on_changed(update)
+    fig.sliderD.on_changed(update)
 
 def main():
     window()
