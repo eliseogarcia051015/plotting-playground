@@ -13,7 +13,7 @@ function to graph. After choosing a function, sliders appear that allow the
 user to dynamically modify parameters of the function and observe how the
 graph changes in real time.
 
-Currently supported functions:
+Current functions:
     1. Linear
     2. Quadratic (to be implemented)
     3. Sine (to be implemented)
