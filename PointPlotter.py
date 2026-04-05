@@ -1,3 +1,10 @@
+"""
+Prompts the user to choose how many points to plot, then collects y-values
+one at a time through a text input interface. Points are plotted sequentially
+on a graph with dynamically adjusting axes.
+"""
+
+
 import matplotlib.pyplot as plt
 from matplotlib.widgets import TextBox
 from matplotlib.ticker import MaxNLocator
