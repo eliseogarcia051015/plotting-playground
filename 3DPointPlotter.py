@@ -9,7 +9,15 @@ import numpy as np
 
 
 def window():
-    ax = plt.figure().add_subplot(projection='3d')
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    fig.canvas.manager.set_window_title("3D Point Plotter")
+
+    #disable dragging and moving around
+    ax._rotate_btn = []   # disables rotation
+    ax._zoom_btn = []     # disables zoom
+    ax._pan_btn = []      # disables pan
+    fig.canvas.mpl_disconnect(fig.canvas.manager.key_press_handler_id) 
     plt.show()
 
 def main():
