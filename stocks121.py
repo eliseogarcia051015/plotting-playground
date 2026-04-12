@@ -64,7 +64,11 @@ Msg: Buy on Day 4 ($1), sell on Day 5 ($10). Profit = 9
 *maybe later add something like having a budget instead of just 1 stock*
 """
 
-
+import matplotlib
+matplotlib.use('TkAgg')  # or 'Agg' if you don't need a window
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+import numpy as np
 
 
 def main():
@@ -76,6 +80,39 @@ def main():
             break
         except ValueError:
             print("Not valid. Enter a number\n")
+    while True:
+        try:
+            limit = int(input("\nEnter random numbers range: "))
+            print(f"You have selected [0, {limit}]")
+            break
+        except ValueError:
+            print("Not valid. Enter a number\n")
+
+    print("Finish implementing me")
+    window(days, limit)
+
+def window(days, limit):
+    fig = plt.figure(figsize=(5,5))
+    fig.canvas.manager.set_window_title("Stock Market Simulation")
+    ax = fig.add_subplot()
+
+    upper_bound = 10
+    lower_bound = 0
+    ax.set_ylim(lower_bound, upper_bound)
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    rng = np.random.default_rng()
+    prices = rng.integers(0,limit+1, size=days)
+    for day in range(days):
+        current_prices = prices[:day + 1]
+
+        print(f"\nDay {day}")
+        print(f"Prices: {[int(p) for p in current_prices]}")
+        print(f"Msg: nothing yet. This shuold go to a function")
+
+        input("Press [enter] to continue: \n")
+
+    plt.show()
 
 if __name__ == "__main__":
     main()
