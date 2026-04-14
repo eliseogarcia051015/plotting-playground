@@ -1,6 +1,10 @@
 """
 Imma probably clean this up later, but this file is basically inspired by LeetCode 121 (Best Time to Buy and Sell Stock).
-
+----------Leetcode121-----------
+You are given an array prices where prices[i] is the price of a given stock on the ith day.
+You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.
+Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.
+----------------------------------
 The idea is to use numpy to generate random stock prices over time and matplotlib (kinda like a point plotter) to visualize it. 
 Each "day" adds a new point to the graph (x = day, y = price).
 
@@ -82,7 +86,7 @@ def main():
             print("Not valid. Enter a number\n")
     while True:
         try:
-            limit = int(input("\nEnter random numbers range: "))
+            limit = int(input("Enter random numbers range: "))
             print(f"You have selected [0, {limit}]")
             break
         except ValueError:
@@ -109,6 +113,9 @@ def window(days, limit):
         print(f"\nDay {day}")
         print(f"Prices: {[int(p) for p in current_prices]}")
         print(f"Msg: nothing yet. This shuold go to a function")
+
+        #Plot Y-point on cur day
+
 
         input("Press [enter] to continue: \n")
 
