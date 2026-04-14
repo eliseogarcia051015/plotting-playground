@@ -80,46 +80,66 @@ def main():
     while True:
         try:
             days = int(input("Days: "))
-            print(f"You have chosen {days} days")
             break
         except ValueError:
             print("Not valid. Enter a number\n")
     while True:
         try:
             limit = int(input("Enter random numbers range: "))
-            print(f"You have selected [0, {limit}]")
             break
         except ValueError:
             print("Not valid. Enter a number\n")
-
-    print("Finish implementing me")
+    print(f"You have chosen {days} days")
+    print(f"You have selected [0, {limit}]")
+    print("---------"*5)
     window(days, limit)
 
 def window(days, limit):
-    fig = plt.figure(figsize=(5,5))
+    fig = plt.figure(figsize=(10,10))
     fig.canvas.manager.set_window_title("Stock Market Simulation")
     ax = fig.add_subplot()
+    plt.grid(True)
 
     upper_bound = 10
     lower_bound = 0
+    ax.set_xlim(0, days)
     ax.set_ylim(lower_bound, upper_bound)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
     rng = np.random.default_rng()
     prices = rng.integers(0,limit+1, size=days)
+    all_stocks = []
     for day in range(days):
-        current_prices = prices[:day + 1]
+        curr_stock = prices[:day + 1]
+        all_stocks = curr_stock
 
         print(f"\nDay {day}")
-        print(f"Prices: {[int(p) for p in current_prices]}")
+        print(f"Prices: {prices[day]}")
+        maxprofit, buydate, selldate = maxProfit(curr_stock)
+        print(f"This is the highest profit you can make {maxprofit}. Buy on day {buydate}. Sell on day {selldate}") #delete this later
         print(f"Msg: nothing yet. This shuold go to a function")
 
         #Plot Y-point on cur day
 
-
-        input("Press [enter] to continue: \n")
+        input("Press [enter] to continue \n")
+    print(f"Array of all prices: {all_stocks}")
 
     plt.show()
+
+def maxProfit(prices) -> int:
+        buy, sell = 0, 1 ##L/R pointers
+        maxP, maxB, maxS = 0, 0, 0
+
+        while sell < (len(prices)):
+            if prices[buy] < prices[sell]:
+                profit = prices[sell] - prices[buy]
+                maxP = max(maxP, profit)
+                maxB = buy
+                maxS = sell
+            else:
+                buy = sell
+            sell += 1
+        return maxP, maxB, maxS
 
 if __name__ == "__main__":
     main()
