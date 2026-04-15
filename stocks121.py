@@ -103,7 +103,7 @@ def window(days, limit):
 
     upper_bound = 10
     lower_bound = 0
-    ax.set_xlim(0, days)
+    ax.set_xlim(0, days - 1)
     ax.set_ylim(lower_bound, upper_bound)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
@@ -117,16 +117,36 @@ def window(days, limit):
         print(f"\nDay {day}")
         print(f"Prices: {prices[day]}")
         maxprofit, buydate, selldate = maxProfit(curr_stock)
+        if day == 0:
+            msg = "Not enough info yet to decide."
+        elif maxprofit == 0:
+            msg = "Don't buy, no profit possible yet."
+        else:
+            msg = f"Buy on Day {buydate} (${prices[buydate]}), Sell on Day {selldate} (${prices[selldate]}). Profit = {maxprofit}"
         print(f"This is the highest profit you can make {maxprofit}. Buy on day {buydate}. Sell on day {selldate}") #delete this later
-        print(f"Msg: nothing yet. This shuold go to a function")
+        print(f"Msg: {msg}")
 
-        #Plot Y-point on cur day
+
         ax.plot(day, prices[day], marker="o", color="blue")
+        if day > 0:
+            prev_price = prices[-1]
+            color = "green" if prices[day] > prev_price else "red"
+            ax.plot([day-1, day], [prev_price, prices[day]], color=color)
+
+        if prices[day] > upper_bound:
+            upper_bound = prices[day] * 1.1
+        if prices[day] < lower_bound:
+            lower_bound = prices[day] * 1.1
+        ax.set_ylim(lower_bound, upper_bound)
+
         plt.show()
 
         input("Press [enter] to continue \n")
     print(f"Array of all prices: {all_stocks}")
 
+
+
+    input("Press enter to end the program")
     #plt.show()
 
 def maxProfit(prices) -> int:
