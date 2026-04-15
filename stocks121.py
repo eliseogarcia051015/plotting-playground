@@ -95,6 +95,7 @@ def main():
     window(days, limit)
 
 def window(days, limit):
+    plt.ion()
     fig = plt.figure(figsize=(10,10))
     fig.canvas.manager.set_window_title("Stock Market Simulation")
     ax = fig.add_subplot()
@@ -120,11 +121,13 @@ def window(days, limit):
         print(f"Msg: nothing yet. This shuold go to a function")
 
         #Plot Y-point on cur day
+        ax.plot(day, prices[day], marker="o", color="blue")
+        plt.show()
 
         input("Press [enter] to continue \n")
     print(f"Array of all prices: {all_stocks}")
 
-    plt.show()
+    #plt.show()
 
 def maxProfit(prices) -> int:
         buy, sell = 0, 1 ##L/R pointers
