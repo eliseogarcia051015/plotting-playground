@@ -101,7 +101,7 @@ def window(days, limit):
     ax = fig.add_subplot()
     plt.grid(True)
 
-    upper_bound = 10
+    upper_bound = 1
     lower_bound = 0
     ax.set_xlim(0, days - 1)
     ax.set_ylim(lower_bound, upper_bound)
@@ -129,7 +129,7 @@ def window(days, limit):
 
         ax.plot(day, prices[day], marker="o", color="blue")
         if day > 0:
-            prev_price = prices[-1]
+            prev_price = prices[day -1]
             color = "green" if prices[day] > prev_price else "red"
             ax.plot([day-1, day], [prev_price, prices[day]], color=color)
 
