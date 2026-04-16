@@ -108,6 +108,7 @@ def window(days, limit):
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
     rng = np.random.default_rng()
+    txt_obj_max,txt_obj_buy,txt_obj_sell = None, None, None
     prices = rng.integers(0,limit+1, size=days)
     all_stocks = []
     for day in range(days):
@@ -116,6 +117,13 @@ def window(days, limit):
         ax.set_ylabel("Price", fontsize=30, labelpad= 15)
         curr_stock = prices[:day + 1]
         all_stocks = curr_stock
+
+        if txt_obj_max:
+            txt_obj_max.remove()
+        if txt_obj_buy:
+            txt_obj_buy.remove()
+        if txt_obj_sell:
+            txt_obj_sell.remove()
 
         print(f"\nDay {day}")
         print(f"Price: {prices[day]}")
@@ -142,11 +150,21 @@ def window(days, limit):
             lower_bound = prices[day] * 1.1
         ax.set_ylim(lower_bound, upper_bound)
 
-        ax.text(0.02, 1.07,
-        f"Max Profit: {maxprofit}",
-        transform=ax.transAxes,
-        fontsize=17,
-        verticalalignment='top')
+        txt_obj_max = ax.text(0.00, 1.07,
+                         f"Max Profit: {maxprofit}",
+                         transform=ax.transAxes,
+                         fontsize=17,
+                         verticalalignment='top')
+        txt_obj_buy = ax.text(0.22, 1.07,
+                         f"Buy Day: {buydate}",
+                         transform=ax.transAxes,
+                         fontsize=17,
+                         verticalalignment='top')
+        txt_obj_sell = ax.text(0.42, 1.07,
+                         f"Sell Day: {selldate}",
+                         transform=ax.transAxes,
+                         fontsize=17,
+                         verticalalignment='top')
 
         plt.show()
 
