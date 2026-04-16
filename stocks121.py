@@ -120,9 +120,6 @@ def window(days, limit):
         print(f"\nDay {day}")
         print(f"Price: {prices[day]}")
         maxprofit, buydate, selldate = maxProfit(curr_stock)
-        if maxprofit > 0:
-            print()#do stuff
-
         if day == 0:
             msg = "Not enough info yet to decide."
         elif maxprofit == 0:
@@ -132,7 +129,7 @@ def window(days, limit):
         print(f"This is the highest profit you can make {maxprofit}. Buy on day {buydate}. Sell on day {selldate}") #delete this later
         print(f"Msg: {msg}")
 
-        ax.plot(range(day+1), curr_stock, color='gray', alpha=0.3)
+        ax.plot(range(day+1), curr_stock, color='gray', alpha=0.3) #if I delcide to clear
         ax.scatter(day, prices[day], color="blue", s=50, zorder=4)
         if day > 0:
             prev_price = prices[day -1]
@@ -154,12 +151,11 @@ def window(days, limit):
         plt.show()
 
         input("Press [enter] to continue \n")
-    print(f"Array of all prices: {all_stocks}")
-
-
-
+    #print(f"Array of all prices: {all_stocks}")
+    ax.axvline(buydate, color="green", linestyle="--", linewidth=2.5)
+    ax.axvline(selldate, color="red", linestyle="--", linewidth=2.5)
+    print(f"\n\nMaximum porfit is when you buy on day {buydate} and sell on day {selldate}\n\n")
     input("Press enter to end the program")
-    #plt.show()
 
 def maxProfit(prices) -> int:
         buy, sell = 0, 1 ##L/R pointers
