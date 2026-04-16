@@ -107,6 +107,11 @@ def window(days, limit):
     ax.set_ylim(lower_bound, upper_bound)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
+    state = {'running': True}
+    def on_close(event):
+        state['running'] = False
+    fig.canvas.mpl_connect('close_event', on_close)
+
     rng = np.random.default_rng()
     txt_obj_max,txt_obj_buy,txt_obj_sell = None, None, None
     prices = rng.integers(0,limit+1, size=days)
@@ -117,6 +122,10 @@ def window(days, limit):
         ax.set_ylabel("Price", fontsize=30, labelpad= 15)
         curr_stock = prices[:day + 1]
         all_stocks = curr_stock
+
+        if not state['running']:
+            print("Window closed by user. Ending simulation.")
+            return
 
         if txt_obj_max:
             txt_obj_max.remove()
@@ -151,28 +160,26 @@ def window(days, limit):
         ax.set_ylim(lower_bound, upper_bound)
 
         txt_obj_max = ax.text(0.00, 1.07,
-                         f"Max Profit: {maxprofit}",
+                         f"Max Profit: ${maxprofit}",
                          transform=ax.transAxes,
                          fontsize=17,
                          verticalalignment='top')
-        txt_obj_buy = ax.text(0.22, 1.07,
-                         f"Buy Day: {buydate}",
+        txt_obj_buy = ax.text(0.32, 1.07,
+                         f"Buy Day: {buydate} (${prices[buydate]}/stock)",
                          transform=ax.transAxes,
                          fontsize=17,
                          verticalalignment='top')
-        txt_obj_sell = ax.text(0.42, 1.07,
-                         f"Sell Day: {selldate}",
+        txt_obj_sell = ax.text(0.72, 1.07,
+                         f"Sell Day: {selldate} (${prices[selldate]}/stock)",
                          transform=ax.transAxes,
                          fontsize=17,
                          verticalalignment='top')
 
-        plt.show()
-
-        input("Press [enter] to continue \n")
+        plt.draw()
+        plt.pause(0.5)
     #print(f"Array of all prices: {all_stocks}")
-    ax.axvline(buydate, color="green", linestyle="--", linewidth=2.5)
-    ax.axvline(selldate, color="red", linestyle="--", linewidth=2.5)
-    print(f"\n\nMaximum porfit is when you buy on day {buydate} and sell on day {selldate}\n\n")
+    ax.axvline(buydate, color="green", linestyle="--", linewidth=3.5)
+    ax.axvline(selldate, color="red", linestyle="--", linewidth=3.5)
     input("Press enter to end the program")
 
 def maxProfit(prices) -> int:
