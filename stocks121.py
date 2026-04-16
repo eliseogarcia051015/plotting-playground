@@ -96,7 +96,7 @@ def main():
 
 def window(days, limit):
     plt.ion()
-    fig = plt.figure(figsize=(10,10))
+    fig = plt.figure(figsize=(12,12))
     fig.canvas.manager.set_window_title("Stock Market Simulation")
     ax = fig.add_subplot()
     plt.grid(True)
@@ -111,12 +111,18 @@ def window(days, limit):
     prices = rng.integers(0,limit+1, size=days)
     all_stocks = []
     for day in range(days):
+        ax.grid(True)
+        ax.set_xlabel("Day", fontsize=30, labelpad= 15)
+        ax.set_ylabel("Price", fontsize=30, labelpad= 15)
         curr_stock = prices[:day + 1]
         all_stocks = curr_stock
 
         print(f"\nDay {day}")
         print(f"Price: {prices[day]}")
         maxprofit, buydate, selldate = maxProfit(curr_stock)
+        if maxprofit > 0:
+            print()#do stuff
+
         if day == 0:
             msg = "Not enough info yet to decide."
         elif maxprofit == 0:
@@ -126,18 +132,24 @@ def window(days, limit):
         print(f"This is the highest profit you can make {maxprofit}. Buy on day {buydate}. Sell on day {selldate}") #delete this later
         print(f"Msg: {msg}")
 
-
-        ax.plot(day, prices[day], marker="o", color="blue")
+        ax.plot(range(day+1), curr_stock, color='gray', alpha=0.3)
+        ax.scatter(day, prices[day], color="blue", s=50, zorder=4)
         if day > 0:
             prev_price = prices[day -1]
             color = "green" if prices[day] > prev_price else "red"
-            ax.plot([day-1, day], [prev_price, prices[day]], color=color)
+            ax.plot([day-1, day], [prev_price, prices[day]], color=color, linewidth=5)
 
         if prices[day] > upper_bound:
             upper_bound = prices[day] * 1.1
         if prices[day] < lower_bound:
             lower_bound = prices[day] * 1.1
         ax.set_ylim(lower_bound, upper_bound)
+
+        ax.text(0.02, 1.07,
+        f"Max Profit: {maxprofit}",
+        transform=ax.transAxes,
+        fontsize=17,
+        verticalalignment='top')
 
         plt.show()
 
