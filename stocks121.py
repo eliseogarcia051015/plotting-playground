@@ -115,7 +115,7 @@ def window(days, limit):
         all_stocks = curr_stock
 
         print(f"\nDay {day}")
-        print(f"Prices: {prices[day]}")
+        print(f"Price: {prices[day]}")
         maxprofit, buydate, selldate = maxProfit(curr_stock)
         if day == 0:
             msg = "Not enough info yet to decide."
@@ -156,9 +156,10 @@ def maxProfit(prices) -> int:
         while sell < (len(prices)):
             if prices[buy] < prices[sell]:
                 profit = prices[sell] - prices[buy]
-                maxP = max(maxP, profit)
-                maxB = buy
-                maxS = sell
+                if profit > maxP:
+                    maxP = profit
+                    maxB = buy
+                    maxS = sell
             else:
                 buy = sell
             sell += 1
