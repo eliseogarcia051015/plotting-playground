@@ -1,5 +1,6 @@
 '''
-ADD Description later. Simple thingy to learn how to use 3d matplot thingy
+Experiments with plotting points in a 3D coordinate system using Matplotlib.
+Allows the user to enter x, y, and z coordinates
 '''
 
 import matplotlib.pyplot as plt
@@ -18,6 +19,9 @@ def window():
     ax._zoom_btn = []     # disables zoom
     ax._pan_btn = []      # disables pan
     fig.canvas.mpl_disconnect(fig.canvas.manager.key_press_handler_id) 
+
+    ax.scatter3D(0.1, 0.2, 0.2)
+    ax.scatter3D(0.2,0.2,0.2)
     plt.show()
 
 def main():
