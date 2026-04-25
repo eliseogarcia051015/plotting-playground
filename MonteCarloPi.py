@@ -9,7 +9,7 @@ from matplotlib.ticker import MaxNLocator
 from matplotlib.widgets import TextBox
 
 def main():
-    ncircles = 0
+    ncircles = None
 
     fig0 = plt.figure(figsize=(6, 3))
     fig0.canvas.manager.set_window_title("User input")
@@ -24,8 +24,12 @@ def main():
     ax.set_yticks([])
 
     def submit(text):
-        try:
-            ncircles = int(text)
+        nonlocal ncircles
+        try:    
+            value = int(text)
+            if value <= 0:
+                raise ValueError
+            ncircles = value
             plt.close(fig0)
         except ValueError:
             print("Not valid input")
@@ -45,9 +49,19 @@ def main():
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
+    fig.text(
+    0.5, 0.93,
+        r"$\pi \quad \approx \quad \frac{\mathrm{inside}}{\mathrm{inside}+\mathrm{outside}}$",
+        ha="center", fontsize = 20\
+    )
+    fig.text(0.5, 0.04, f"Sample: {ncircles}", ha="center")
+    print(ncircles)
+
     circle = plt.Circle((0, 0), 1, color='white', fill=False)
     ax.add_patch(circle)
     
+
+
 
     print("")
     plt.show()
