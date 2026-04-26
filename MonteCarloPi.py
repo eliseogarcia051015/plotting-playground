@@ -7,6 +7,7 @@ inside points to total points is used to approximate pi.
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.widgets import TextBox
+import numpy as np
 
 def main():
     ncircles = None
@@ -43,8 +44,8 @@ def main():
     fig.canvas.manager.set_window_title("Monte Carlo Method")
     ax.axhline(0, color="black", linestyle="--", linewidth=1)
     ax.axvline(0, color="black", linestyle="--", linewidth=1)
-    ax.set_ylim(-1.1, 1.1)
-    ax.set_xlim(-1.1, 1.1)
+    ax.set_ylim(-1, 1)
+    ax.set_xlim(-1, 1)
     ax.grid(True)
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
@@ -60,6 +61,13 @@ def main():
     circle = plt.Circle((0, 0), 1, color='white', fill=False)
     ax.add_patch(circle)
     
+    for i  in range(ncircles):
+        x = np.random.uniform(-1,1)
+        y = np.random.uniform(-1,1)
+        print(f"{x:.2f} and {y:.2f}")
+        ax.plot(x,y, marker="o", color="white")
+        plt.pause(0.05)
+        
 
 
 
