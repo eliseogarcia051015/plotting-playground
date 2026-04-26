@@ -50,9 +50,9 @@ def main():
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
-    fig.text(
+    pi_text = fig.text(
     0.5, 0.93,
-        r"$\pi \quad \approx \quad \frac{\mathrm{inside}}{\mathrm{inside}+\mathrm{outside}}$",
+        r"$\pi \quad \approx \quad 4 * \frac{\mathrm{inside}}{\mathrm{inside}+\mathrm{outside}}$",
         ha="center", fontsize = 20\
     )
     fig.text(0.5, 0.04, f"Sample: {ncircles}", ha="center")
@@ -60,13 +60,28 @@ def main():
 
     circle = plt.Circle((0, 0), 1, color='white', fill=False)
     ax.add_patch(circle)
-    
+
+    inside = 0
+    outside = 0
+    plt.pause(2)
     for i  in range(ncircles):
+        if not plt.fignum_exists(fig.number):
+            break
+
         x = np.random.uniform(-1,1)
         y = np.random.uniform(-1,1)
-        print(f"{x:.2f} and {y:.2f}")
-        ax.plot(x,y, marker="o", color="white")
-        plt.pause(0.05)
+        if x**2 + y**2 <= 1:
+            color = "lime"
+            inside += 1
+        else:
+            color = "red"
+            outside += 1
+        ax.plot(x,y, marker="o", color=color)
+        supposed_pi = 4 * inside / (inside + outside)
+        pi_text.set_text(
+            rf"$\pi \quad \approx \quad 4 \cdot \frac{{{inside}}}{{{inside}+{outside}}} \approx {supposed_pi:.4f}$"
+        )
+        plt.pause(0.00001)
         
 
 
