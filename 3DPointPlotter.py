@@ -20,8 +20,9 @@ def window():
     ax._pan_btn = []      # disables pan
     fig.canvas.mpl_disconnect(fig.canvas.manager.key_press_handler_id) 
 
-    ax.scatter3D(0.1, 0.2, 0.2)
-    ax.scatter3D(0.2,0.2,0.2)
+    coords1 = [x.strip() for x in input("Enter values (x, y, z): ").split(" ")] 
+    ax.scatter3D(coords1[0], coords1[1], coords1[2])
+    ax.scatter3D(0.0,0.0,0.0)
     plt.show()
 
 def main():
