@@ -26,7 +26,7 @@ def window():
     plt.show()
 
 def main():
-    window()
+    window() 
 
 if __name__ == "__main__":
     main()
