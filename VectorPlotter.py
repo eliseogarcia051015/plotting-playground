@@ -4,6 +4,7 @@ Should be similar to point plotter but with vectors instead of pointa
 
 import matplotlib.pyplot as plt
 import matplotlib.animation as anim
+from matplotlib.widgets import Button
 import numpy as np
 
 def main():
@@ -23,13 +24,16 @@ def main():
 
     max_val = max(abs(x1), abs(y1), abs(x1 + x2), abs(y1 + y2), 5)
     ax.set_xlim(-max_val - 1, max_val + 1)
-    ax.set_ylim(-max_val - 1, max_val + 1)
+    ax.set_ylim(-max_val - 1, max_val+ 1)
+
+    txt_ax = plt.axes([0.8,0.89,0.1, 0.1])
+    text_box = Button(txt_ax, "Reset")
 
     v1 = ax.quiver(0,0,0,0, angles="xy", scale_units="xy", scale=1, color="red")
     v2 = ax.quiver(x1,y1,0,0, angles="xy", scale_units="xy", scale=1, color="green")
     v3 = ax.quiver(0,0,0,0, angles="xy", scale_units="xy", scale=1, color="blue")
 
-    frames_per_vector = 20
+    frames_per_vector = 30
     steps_v1_x = np.linspace(0, x1, frames_per_vector)
     steps_v1_y = np.linspace(0, y1, frames_per_vector)
 
