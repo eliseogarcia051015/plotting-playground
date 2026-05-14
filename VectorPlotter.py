@@ -7,6 +7,9 @@ import matplotlib.animation as anim
 from matplotlib.widgets import Button
 import numpy as np
 
+def reset():
+    plt.clf()
+
 def main():
     x1 = int(input("x1: "))
     y1 = int(input("y1: "))
@@ -61,6 +64,7 @@ def main():
     #ax.scatter(x1+x2,y1+y2, color="blue")
 
     plt.show()
+    reset()
 
 if __name__ == "__main__":
     main()
