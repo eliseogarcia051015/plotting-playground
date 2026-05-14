@@ -7,8 +7,15 @@ import matplotlib.animation as anim
 from matplotlib.widgets import Button
 import numpy as np
 
-def reset():
-    plt.clf()
+def reset(event, fig, ax):
+    ax.clear()
+    fig.canvas.draw_idle()
+    ax.axhline(0, color="black", linestyle="--")
+    ax.axvline(0, color="black", linestyle="--")
+    ax.grid(True)
+    ax.set_xlim(-5, 5)
+    ax.set_ylim(-5, 5)
+    print("Something happened")
 
 def main():
     x1 = int(input("x1: "))
@@ -29,8 +36,9 @@ def main():
     ax.set_xlim(-max_val - 1, max_val + 1)
     ax.set_ylim(-max_val - 1, max_val+ 1)
 
-    txt_ax = plt.axes([0.8,0.89,0.1, 0.1])
-    text_box = Button(txt_ax, "Reset")
+    reset_ax = plt.axes([0.8,0.89,0.1, 0.1])
+    reset_button = Button(reset_ax, "Reset")
+    reset_button.on_clicked(lambda event: reset(event, fig, ax))
 
     v1 = ax.quiver(0,0,0,0, angles="xy", scale_units="xy", scale=1, color="red")
     v2 = ax.quiver(x1,y1,0,0, angles="xy", scale_units="xy", scale=1, color="green")
@@ -61,10 +69,9 @@ def main():
         return v1, v2, v3
     total_frames = frames_per_vector * 3
     ani = anim.FuncAnimation(fig, update, frames=total_frames, interval=40,blit=True, repeat=False)
-    #ax.scatter(x1+x2,y1+y2, color="blue")
-
+    
     plt.show()
-    reset()
+    
 
 if __name__ == "__main__":
     main()
