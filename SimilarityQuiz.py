@@ -1,7 +1,7 @@
 import numpy as np
 
 def similarity(v1, v2):
-    return np.dot(v1, v2) / np.linalg.norm(v1,v2)
+    return np.dot(v1, v2) / (np.linalg.norm(v1)*np.linalg.norm(v2))
 
 def main():
     print("This is a simple test")
@@ -16,6 +16,7 @@ def main():
         response = np.array([question1, question2, question3, question4])
         responses.append(response)
     print(responses)
+    print(f"\nSimilarity: {similarity(responses[0],responses[1])*100:.2f}%")
 
 
 if __name__ == "__main__":
