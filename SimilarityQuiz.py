@@ -1,7 +1,10 @@
 import numpy as np
 
 def similarity(v1, v2):
-    return np.dot(v1, v2) / (np.linalg.norm(v1)*np.linalg.norm(v2))
+    dist = np.linalg.norm(v1 - v2)
+    max_dist = np.sqrt(len(v1) * (5 - 1)**2)
+    return 1 - (dist / max_dist)
+
 
 def main():
     print("This is a simple test")
