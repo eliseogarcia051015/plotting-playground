@@ -13,8 +13,8 @@ def window(order: int):
     fig.canvas.manager.set_window_title("Hilbert Curve Visualizer")
 
     N = int(math.pow(2,order))
-    ax.set_xlim(0-0.1,N+0.1)
-    ax.set_ylim(0-0.1,N+0.1)
+    ax.set_xlim(-0.5,N-0.5)
+    ax.set_ylim(-0.5,N-0.5)
 
     x_coords, y_coords = plotPoints(order)
     ax.plot(x_coords, y_coords, color="blue", linewidth=2) #connecting lines
@@ -35,12 +35,42 @@ def plotPoints(order: int):
     return x_coords, y_coords
 
 def hilbert(i, order):
-    #goal should be to convert hilbert(i, order) -> (x,y)
-    return 0,1 
+    points = [ #base case
+        (0,0),
+        (0,1),
+        (1,1),
+        (1,0)
+    ]
+    if (order == 1):
+        return points[i]
+    # Find which of the 4 quadrants the index falls into
+    cells_per_quadrant = int(math.pow(4, order - 1))
+    quadrant = i // cells_per_quadrant
+    
+    # Find the sub-index within that quadrant
+    sub_index = i % cells_per_quadrant
+    
+    # Recursively get the (x, y) for the smaller sub-curve
+    x, y = hilbert(sub_index, order - 1)
+    
+    # Calculate the coordinate shift for the current order
+    offset = int(math.pow(2, order - 1))
+    
+    # Rotate and shift coordinates based on the quadrant
+    if quadrant == 0:
+        # Bottom-left quadrant: flip across the diagonal (swap x and y)
+        return y, x
+    elif quadrant == 1:
+        # Top-left quadrant: shift up
+        return x, y + offset
+    elif quadrant == 2:
+        # Top-right quadrant: shift up and right
+        return x + offset, y + offset
+    else:
+        # Bottom-right quadrant: flip and shift right
+        return (offset - 1 - y) + offset, (offset - 1 - x)
 
-#order = x, 
-#quandrants = math.pow(2, order), 
-#total_points = quandrants * quandrants
+
 def main():
     while(True):
         try:
