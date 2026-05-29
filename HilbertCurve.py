@@ -43,34 +43,8 @@ def hilbert(i, order):
     ]
     if (order == 1):
         return points[i]
-    # Find which of the 4 quadrants the index falls into
-    cells_per_quadrant = int(math.pow(4, order - 1))
-    quadrant = i // cells_per_quadrant
     
-    # Find the sub-index within that quadrant
-    sub_index = i % cells_per_quadrant
-    
-    # Recursively get the (x, y) for the smaller sub-curve
-    x, y = hilbert(sub_index, order - 1)
-    
-    # Calculate the coordinate shift for the current order
-    offset = int(math.pow(2, order - 1))
-    
-    # Rotate and shift coordinates based on the quadrant
-    if quadrant == 0:
-        # Bottom-left quadrant: flip across the diagonal (swap x and y)
-        return y, x
-    elif quadrant == 1:
-        # Top-left quadrant: shift up
-        return x, y + offset
-    elif quadrant == 2:
-        # Top-right quadrant: shift up and right
-        return x + offset, y + offset
-    else:
-        # Bottom-right quadrant: flip and shift right
-        return (offset - 1 - y) + offset, (offset - 1 - x)
-
-
+    #implement recursion algorithm
 def main():
     while(True):
         try:
