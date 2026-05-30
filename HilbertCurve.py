@@ -34,6 +34,10 @@ def plotPoints(order: int):
         y_coords.append(y)
     return x_coords, y_coords
 
+#  -----------
+#  |_Q1_|_Q2_|
+#  |_Q0_|_Q3_|
+#  -----------
 def hilbert(i, order):
     points = [ #base case
         (0,0),
@@ -43,8 +47,25 @@ def hilbert(i, order):
     ]
     if (order == 1):
         return points[i]
-    
-    #implement recursion algorithm
+    quadrant_size = int(math.pow(4, order-1))
+    quadrant = i // quadrant_size
+    offset = i % quadrant_size
+
+    x,y = hilbert(offset, order-1)
+    half = 2 ** (order - 1)
+
+    if quadrant == 0:
+        return y, x
+
+    elif quadrant == 1:
+        return x, y + half
+
+    elif quadrant == 2:
+        return x + half, y + half
+
+    else:  # quadrant == 3
+        return (2 * half - 1 - y), (half - 1 - x)
+
 def main():
     while(True):
         try:
