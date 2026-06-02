@@ -7,6 +7,7 @@ through every point in a grid without crossing itself.
 """
 import matplotlib.pyplot as plt
 import math
+from matplotlib.animation import FuncAnimation
 
 def window(order: int):
     fig,ax = plt.subplots(figsize=(6,6))
@@ -17,8 +18,33 @@ def window(order: int):
     ax.set_ylim(-0.5,N-0.5)
 
     x_coords, y_coords = plotPoints(order)
-    ax.plot(x_coords, y_coords, color="blue", linewidth=2) #connecting lines
-    ax.scatter(x_coords, y_coords, color="red", s=20) #corner points
+    line, =ax.plot([],[], color="blue", linewidth=2) #connecting line
+    point, = ax.plot([], [], "ro", markersize=6) #corner points
+
+    def update(frame):
+        line.set_data(
+            x_coords[:frame + 1],
+            y_coords[:frame + 1]
+        )
+
+        point.set_data(
+            [x_coords[frame]],
+            [y_coords[frame]]
+        )
+
+        return line, point
+
+    duration = 5000  # milliseconds
+    interval = duration / len(x_coords)
+    animation = FuncAnimation(
+        fig,
+        update,
+        frames=len(x_coords),
+        interval=interval,
+        blit=True,
+        repeat=False
+    )
+
     plt.show()
 
 def plotPoints(order: int):
@@ -56,13 +82,10 @@ def hilbert(i, order):
 
     if quadrant == 0:
         return y, x
-
     elif quadrant == 1:
         return x, y + half
-
     elif quadrant == 2:
         return x + half, y + half
-
     else:  # quadrant == 3
         return (2 * half - 1 - y), (half - 1 - x)
 
