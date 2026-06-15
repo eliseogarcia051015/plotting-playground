@@ -8,6 +8,9 @@ distribution, forming a bell-shaped curve.
 
 import matplotlib.pyplot as plt
 
+class Ball:
+    pass
+
 def main():
     fig, ax = plt.subplots(figsize=(6,6))
     fig.canvas.manager.set_window_title("Galton board")
