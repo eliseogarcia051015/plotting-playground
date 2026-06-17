@@ -9,7 +9,8 @@ distribution, forming a bell-shaped curve.
 import matplotlib.pyplot as plt
 
 class Ball:
-    pass
+    pass 
+
 
 def main():
     fig, ax = plt.subplots(figsize=(6,6))
