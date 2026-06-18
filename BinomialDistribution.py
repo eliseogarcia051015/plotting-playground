@@ -9,8 +9,23 @@ distribution, forming a bell-shaped curve.
 import matplotlib.pyplot as plt
 
 class Ball:
-    pass 
+    def choose_next_target(self):
+        # randomly select left or right child peg
+        pass
 
+    def update(self):
+        # TODO:
+        # move toward target
+        # if arrived, choose next target
+        pass
+
+    
+class GaltonBoard:
+    def create_board():
+        pass
+
+    def update(frame):
+        pass
 
 def main():
     fig, ax = plt.subplots(figsize=(6,6))
@@ -19,6 +34,7 @@ def main():
     plt.yticks([])
 
     plt.show()
+
 
 if __name__ == "__main__":
     main()
