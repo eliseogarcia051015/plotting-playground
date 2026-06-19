@@ -14,7 +14,6 @@ class Ball:
         pass
 
     def update(self):
-        # TODO:
         # move toward target
         # if arrived, choose next target
         pass
