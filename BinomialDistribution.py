@@ -37,3 +37,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+##
+# N=x
+# pins=x(x+1)/2
+# outcomes = x+1
+##
