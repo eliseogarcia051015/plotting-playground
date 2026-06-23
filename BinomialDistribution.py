@@ -21,9 +21,11 @@ class Ball:
     
 class GaltonBoard:
     def create_board():
+        #
         pass
 
     def update(frame):
+        #
         pass
 
 def main():
