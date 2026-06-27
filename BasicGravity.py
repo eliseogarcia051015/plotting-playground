@@ -13,18 +13,18 @@ def main():
     ax.set_ylim(0,window_y_limit), ax.set_yticks([])
     
     x = 1        #m
-    y = 8        #m
+    y = 9        #m
     v = 0.00     #m/s
     g = -9.81    #m/s^2
     e = .73      #about the COR for a tennis ball
     t = 0.00     #s
     dt = 0.02    #second/frame
 
-    time_txt = ax.text(0, 10.7, f'Time: {t}')
-    vel_txt = ax.text(0.7, 10.7, f'Velocity: {v}')
-    height_txt = ax.text(1.4, 10.7, f"Height: {y}")
+    time_txt = ax.text(0, 10.7, f'Time: {t}s')
+    vel_txt = ax.text(0.59, 10.7, f'Velocity: {v}m/s')
+    height_txt = ax.text(1.5, 10.7, f"Height: {y}m")
     
-    r=0.3 #ball radius
+    r=0.25 #ball radius
     ball = ax.scatter([x], [y+r], color = "white", edgecolors='blue', s=100)
     plt.pause(1.5)
 
@@ -36,7 +36,6 @@ def main():
         y = y + v * dt 
         #print(f"vel: {v:.2f} and time:{t}")
 
-        # Bounce condition
         if y <= 0:
             y = 0
             print(f"Hit ground at t={t:.2f}s with v={v:.2f} m/s")
@@ -46,9 +45,9 @@ def main():
                 print("Ball stopped.")
                 v = 0
                 anim.event_source.stop()
-        time_txt.set_text(f'Time: {t:.2f}')
-        height_txt.set_text(f'Height: {y:.0f}')
-        vel_txt.set_text(f'Velocity: {v:.2f}')
+        time_txt.set_text(f'Time: {t:.2f}s')
+        height_txt.set_text(f'Height: {y:.0f}m')
+        vel_txt.set_text(f'Velocity: {v:.2f}m/s')
         fig.canvas.draw()
         ball.set_offsets([x, y+r])
         return ball, time_txt
