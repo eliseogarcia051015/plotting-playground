@@ -6,12 +6,34 @@ As more balls are dropped, the distribution of balls across the bins approaches 
 distribution, forming a bell-shaped curve.
 """
 
+import random
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+ROWS = 8
+BALL_RADIUS = 0.15
+STEP_SIZE = 0.20
 
 class Ball:
+    def __init__(self, start_x=0.0, start_y=0.0):
+        self.x = start_x
+        self.y = start_y
+        self.current_row = 0
+        self.current_col = 0
+        self.is_done = False
+
     def choose_next_target(self):
-        # randomly select left or right child peg
-        pass
+        if self.current_row >= ROWS:
+            self.is_done = True
+            return
+
+        move = random.choice([0, 1])
+        
+        self.current_row += 1
+        self.current_col += move
+        
+        self.target_y = -self.current_row
+        self.target_x = self.current_col - (self.current_row * 0.5)
 
     def update(self):
         # move toward target
