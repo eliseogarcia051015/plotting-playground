@@ -11,6 +11,7 @@ def main():
     fig.canvas.manager.set_window_title(
         "Stochastic Beverton-Holt Model"
     )
+    
 
     # Model parameters
     K = 1000  # carrying capacity
