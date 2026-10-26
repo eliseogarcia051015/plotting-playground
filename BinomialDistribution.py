@@ -40,6 +40,10 @@ class Ball:
         # if arrived, choose next target
         pass
 
+class Pin:
+    def object():
+        #implement me
+        return
     
 class GaltonBoard:
     def create_board():
