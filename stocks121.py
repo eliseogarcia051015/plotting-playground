@@ -63,9 +63,6 @@ Day 5
 Prices: [7, 6, 4, 5, 1, 10]
 *Points: (0,7), (1,6), (2,4), (3,5), (4,1), (5,10)*
 Msg: Buy on Day 4 ($1), sell on Day 5 ($10). Profit = 9
-
-
-*maybe later add something like having a budget instead of just 1 stock*
 """
 
 import matplotlib
@@ -176,7 +173,7 @@ def window(days, limit):
                          verticalalignment='top')
 
         plt.draw()
-        plt.pause(0.5)
+        plt.pause(0.1)
     #print(f"Array of all prices: {all_stocks}")
     ax.axvline(buydate, color="green", linestyle="--", linewidth=3.5)
     ax.axvline(selldate, color="red", linestyle="--", linewidth=3.5)
