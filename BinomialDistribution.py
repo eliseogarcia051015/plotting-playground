@@ -47,7 +47,7 @@ class Pin:
     
 class GaltonBoard:
     def create_board():
-    
+        #implement me
         pass
 
     def update(frame):
